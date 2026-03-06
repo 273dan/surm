@@ -14,6 +14,13 @@ struct SurmFile {
       };
       return file;
   }
+  void print_debug() const {
+    if(project.has_value()) project->print_debug();
+    if(tasks.has_value()) tasks->print_debug();
+    if(deps.has_value()) deps->print_debug();
+    if(executable.has_value()) executable->print_debug();
+
+  }
   std::optional<Project> project;
   std::optional<Tasks> tasks;
   std::optional<Deps> deps;

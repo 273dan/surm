@@ -14,6 +14,7 @@ target_link_libraries(surm PRIVATE yaml-cpp)
 target_include_directories(surm PRIVATE 
     third_party/rang/include
     third_party/indicators/include
+    third_party/cli11
 )
 
 add_subdirectory(src)

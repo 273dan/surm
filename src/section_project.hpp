@@ -1,16 +1,22 @@
 #include "yaml-cpp/node/node.h"
 #include <optional>
+#include <print>
 #include <string>
-#include "log.hpp"
 struct Project {
+  using ostr = std::optional<std::string>;
   static std::optional<Project> from_yaml(const YAML::Node& node) {
-    if(!node["project"]) {
-      Log::warn("Missing 'project' section. See `surm --help project`");
-      return std::nullopt;
-    }
-    return std::nullopt;
-    
+    auto& node_proj = node["project"];
+    return Project {
+      .name = node_proj["name"] ? ostr{node_proj["name"].as<std::string>()} : std::nullopt,
+      .version = node_proj["version"] ? ostr{node_proj["version"].as<std::string>()} : std::nullopt,
+    };
   }
-  std::string name;
-  std::string version;
+  void print_debug() const {
+    std::println("project:");
+    std::println("  name: {}", name.value_or(""));
+    std::println("  version: {}", version.value_or(""));
+
+  }
+  ostr name;
+  ostr version;
 };

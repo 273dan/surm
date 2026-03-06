@@ -1,6 +1,6 @@
 .PHONY: all build run config
 
-all: run
+all: build
 
 config:
 	cmake -S . -B build
@@ -11,5 +11,9 @@ run:	build
 install:	build
 	sudo cp ./build/surm /usr/bin/surm
 	sudo chmod +x /usr/bin/surm
+test:	build
+	python3 ./tests/test_runner.py
+test-v:	build
+	python3 ./tests/test_runner.py -v
 
 

@@ -5,6 +5,7 @@
 #include <ranges>
 #include <string>
 #include <vector>
+#include <print>
 struct Executable {
   static std::optional<Executable> from_yaml(const YAML::Node& node) {
     Executable executable{};
@@ -22,6 +23,15 @@ struct Executable {
     executable.sources = node_executable["sources"].as<std::vector<std::string>>();
     executable.sources_as_str = std::ranges::to<std::string>( executable.sources | std::views::join_with(' '));
     return executable;
+
+  }
+  void print_debug() const {
+    std::println("executable");
+    std::println("  name: {}", name.value_or(""));
+    std::println("  sources:");
+    for(auto& source: sources) {
+      std::println("    {}", source);
+    }
 
   }
   std::optional<std::string> name{};
