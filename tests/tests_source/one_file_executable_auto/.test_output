@@ -1,0 +1,9 @@
+project:
+  name: project
+  version: 0.0.0
+  standard: 17
+executable:
+  name: main
+  sources:
+    ./main.cpp
+Hello, world!

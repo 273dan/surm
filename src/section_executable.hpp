@@ -1,11 +1,10 @@
 #pragma once
-#include "log.hpp"
 #include "yaml-cpp/node/node.h"
 #include <optional>
-#include <ranges>
 #include <string>
 #include <vector>
 #include <print>
+namespace surm::section {
 struct Executable {
   static std::optional<Executable> from_yaml(const YAML::Node& node) {
     Executable executable{};
@@ -17,16 +16,19 @@ struct Executable {
       executable.name = node_executable["name"].as<std::string>();
     }
     if(!node["executable"]["sources"]) {
-      Log::error("No sources specified for executable {}", executable.name.value_or(""));
       return std::nullopt;
     }
-    executable.sources = node_executable["sources"].as<std::vector<std::string>>();
-    executable.sources_as_str = std::ranges::to<std::string>( executable.sources | std::views::join_with(' '));
+    if(node_executable["sources"].IsSequence()) {
+      executable.sources = node_executable["sources"].as<std::vector<std::string>>();
+    }
+    else {
+      executable.sources = {node_executable["sources"].as<std::string>()};
+    }
     return executable;
 
   }
   void print_debug() const {
-    std::println("executable");
+    std::println("executable:");
     std::println("  name: {}", name.value_or(""));
     std::println("  sources:");
     for(auto& source: sources) {
@@ -36,5 +38,5 @@ struct Executable {
   }
   std::optional<std::string> name{};
   std::vector<std::string> sources{};
-  std::string sources_as_str;
 };
+}

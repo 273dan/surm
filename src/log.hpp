@@ -2,9 +2,11 @@
 #include "rang.hpp"
 #include <format>
 #include <iostream>
-namespace Log {
+namespace surm::log {
+class Logger {
+public:
   template <typename ...Args>
-  void error(std::format_string<Args...> fmt, Args&&... args) {
+  static void error(std::format_string<Args...> fmt, Args&&... args) {
     std::cout
       << rang::style::bold
       << rang::fg::red
@@ -14,7 +16,7 @@ namespace Log {
       << "\n";
   }
   template <typename ...Args>
-  void warn(std::format_string<Args...> fmt, Args&&... args) {
+  static void warn(std::format_string<Args...> fmt, Args&&... args) {
     std::cout
       << rang::style::bold
       << rang::fg::yellow
@@ -23,5 +25,10 @@ namespace Log {
       << rang::style::reset
       << "\n";
   }
+  static Logger& get() {
+    static Logger logger;
+    return logger;
+  }
+};
 
 }

@@ -7,4 +7,5 @@ target_sources(surm
     section_project.hpp
     section_tasks.hpp
     surmfile.hpp
+    parser.hpp
 )

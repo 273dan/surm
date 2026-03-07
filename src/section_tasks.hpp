@@ -4,6 +4,7 @@
 #include <print>
 #include <string>
 #include <unordered_map>
+namespace surm::section {
 struct TaskItem {
   std::string script;
   std::vector<std::string> script_lines;
@@ -23,4 +24,4 @@ struct Tasks {
   }
   std::unordered_map<std::string, TaskItem> tasks;
 };
-
+}

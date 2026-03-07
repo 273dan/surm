@@ -4,6 +4,7 @@ from pathlib import Path
 import shutil
 import subprocess
 from typing import Tuple
+import difflib
 
 global verbose
 verbose = False
@@ -89,23 +90,34 @@ def run_test(test: Path, stage_dir: Path) -> bool:
     printv(expected_output_full)
 
     printv("starting test")
-    test_command_split = test_command.split(" ")
-    result = subprocess.run(test_command_split, capture_output=True, text=True, cwd=stage_test_dir, env=run_env)
+    result = subprocess.run(test_command, capture_output=True, text=True, cwd=stage_test_dir, env=run_env, shell=True)
     actual_output_full = result.stdout
     actual_output_lines = list(l.strip('\n') for l in actual_output_full.splitlines())
     printv("test finished, cleaning stage")
     shutil.rmtree(stage_test_dir)
 
-    if(actual_output_full != expected_output_full):
-        print(f"{test_name}: fail")
-        print("expected")
-        for line in expected_output_lines:
-            print(f"  {line}")
-        print("found")
-        for line in actual_output_lines:
-            print(f"  {line}")
+    if actual_output_full != expected_output_full:
+        print(f"{test_name}: \033[31mfail\033[0m")
+   
+        diff = difflib.unified_diff(
+            expected_output_full.splitlines(keepends=True),
+            actual_output_full.splitlines(keepends=True),
+            fromfile='expected',
+            tofile='actual'
+        )
+   
+        for line in diff:
+            if line.startswith('+'):
+                print(f"\033[32m{line.rstrip()}\033[0m") # Green
+            elif line.startswith('-'):
+                print(f"\033[31m{line.rstrip()}\033[0m") # Red
+            else:
+                print(line.rstrip())
+        if result.stderr:
+            print("stderr")
+            print(result.stderr)
         return False
-    print(f"{test_name}: pass")
+    print(f"{test_name}: \033[32mpass\033[0m")
     return True
 
 

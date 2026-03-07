@@ -1,0 +1,9 @@
+targets:
+  - name: main
+    type: executable
+    sources:
+      - main.cpp
+      - main2.hpp
+  - name: mainlib
+    type: library
+    sources: [lib1.cpp, lib2.cpp]
