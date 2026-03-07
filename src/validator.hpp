@@ -1,4 +1,5 @@
 #pragma once
+#include "log.hpp"
 #include "section_executable.hpp"
 #include "surmfile.hpp"
 #include "section_project.hpp"
@@ -40,6 +41,7 @@ private:
     }
     else {
       if(!ad_.check_files_exist(exec.sources)) {
+        log::Logger::add_message(log::LogMessage::Error, "Source does not exist");
         is_valid = false;
       }
     }

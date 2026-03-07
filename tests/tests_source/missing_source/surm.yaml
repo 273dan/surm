@@ -1,0 +1,3 @@
+executable:
+  name: main
+  sources: [missing_file.cpp]

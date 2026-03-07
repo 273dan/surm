@@ -1,3 +1,4 @@
+#include <memory>
 #include <yaml-cpp/yaml.h>
 #include <rang.hpp>
 #include <indicators/progress_spinner.hpp>
@@ -20,13 +21,16 @@ int main(int argc, const char** argv) {
     ->alias("sa");
   app.add_subcommand("build", "Build the project")
     ->alias("b");
+  app.add_subcommand("run", "Build + run the project")
+    ->alias("r");
   CLI11_PARSE(app, argc, argv);
   if (!std::filesystem::exists("./surm.yaml")) {
     surm::log::Logger::error("No surm.yaml file found");
     return 1;
   }
   surm::Parser parser{"./surm.yaml"};
-  surm::SurmFile user_surmfile = parser.get_surmfile();
+  auto user_surmfile = parser.get_surmfile();
+  surm::log::Logger::flush_messages();
   /* Surmfile parsed */
   if(app.parsed()) {
     if(app.get_subcommand("show")->parsed()) {
@@ -43,6 +47,7 @@ int main(int argc, const char** argv) {
   /* Surmfile validated */
   surm::Validator validator{user_surmfile};
   std::optional<surm::SurmFile> validated_surmfile_opt =  validator.validate();
+  surm::log::Logger::flush_messages();
   if(!validated_surmfile_opt.has_value()) {
     surm::log::Logger::error("surmfile errors");
     return 1;
@@ -59,7 +64,6 @@ int main(int argc, const char** argv) {
   surm::Builder builder{validated_surmfile};
   if(app.get_subcommand("build")->parsed()) {
     int ec = builder.build();
-
   }
 
 
