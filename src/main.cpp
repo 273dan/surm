@@ -39,11 +39,11 @@ int main(int argc, const char** argv) {
   surm::log::Logger::flush_messages();
   /* Surmfile parsed */
   if(app.parsed()) {
-    if(app.get_subcommand("show")->parsed()) {
+    if(app.got_subcommand("show")) {
       user_surmfile.print_debug();
       return 0;
     }
-    if(app.get_subcommand("which")->parsed()) {
+    if(app.got_subcommand("which")) {
       std::println("{}", user_surmfile.absolute_path_to_file.string());
       return 0;
     }
@@ -61,7 +61,7 @@ int main(int argc, const char** argv) {
 
 
   auto validated_surmfile = std::move(validated_surmfile_opt.value());
-  if(app.get_subcommand("show-auto")->parsed()) {
+  if(app.got_subcommand("show-auto")) {
     validated_surmfile.print_debug();
     return 0;
   }
@@ -76,7 +76,7 @@ int main(int argc, const char** argv) {
 
   /* Builder created */
   surm::Builder builder{validated_surmfile, depsmanager};
-  if(app.get_subcommand("build")->parsed()) {
+  if(app.got_subcommand("build")) {
     int ec = builder.build();
   }
 
