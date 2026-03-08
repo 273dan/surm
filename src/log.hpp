@@ -53,7 +53,7 @@ public:
     }
   }
   static void log(const MissingSourcesForTarget& message) {
-    log::error("Missing sources for target {}:", message.target);
+    log::error("missing sources for target {}:", message.target);
     for(auto& source: message.sources) {
       std::println("    - {}", source);
     }

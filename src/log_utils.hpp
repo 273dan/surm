@@ -34,6 +34,15 @@ namespace {
       << std::format(fmt, std::forward<Args>(args)...) 
       << "\n";
   }
+  template <typename ...Args>
+  static void failure(std::format_string<Args...> fmt, Args&&... args) {
+    std::cout
+      << rang::style::bold
+      << rang::fgB::gray
+      << "[x] "
+      << std::format(fmt, std::forward<Args>(args)...) 
+      << "\n";
+  }
 
 
 

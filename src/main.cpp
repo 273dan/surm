@@ -12,6 +12,7 @@
 
 int main(int argc, const char** argv) {
   CLI::App app{"surm"};
+  app.require_subcommand();
   app.add_subcommand("show", "Print surm.yaml as surm sees it")
     ->alias("s");
   app.add_subcommand("which", "Print the full path of the current surm.yaml file")
@@ -48,7 +49,7 @@ int main(int argc, const char** argv) {
   std::optional<surm::SurmFile> validated_surmfile_opt =  validator.validate();
   surm::log::Logger::flush_messages();
   if(!validated_surmfile_opt.has_value()) {
-    surm::log::error("surmfile errors");
+    surm::log::failure("build failed");
     return 1;
   }
 
