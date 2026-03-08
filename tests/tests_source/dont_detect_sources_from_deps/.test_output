@@ -1,0 +1,13 @@
+project:
+  name: dont_detect_sources_from_deps
+  version: 0.0.0
+  standard: 17
+deps:
+  repo: nlohmann/json
+    release: 3.12.0
+    file: json.hpp
+executable:
+  name: main
+  sources:
+    .surm/include/nlohmann/json/json.hpp
+    main.cpp

@@ -17,6 +17,12 @@ public:
             auto ext = dir_entry.path().extension();
             return ext == ".cpp" || ext == ".hpp";
         })
+        | std::views::filter([this](const fs::directory_entry& dir_entry) -> bool {
+            std::filesystem::path deps_dir = root_dir_ / ".surm" / "deps";
+            auto [it_deps_dir, it_current_path] = std::mismatch(deps_dir.begin(), deps_dir.end(), dir_entry.path().begin(), dir_entry.path().end());
+            return it_deps_dir != deps_dir.end();
+            
+        })
         | std::views::transform([this](const fs::directory_entry& dir_entry) {
             return dir_entry.path().lexically_relative(root_dir_).string();
         })
