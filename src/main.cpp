@@ -24,11 +24,12 @@ int main(int argc, const char** argv) {
   app.add_subcommand("run", "Build + run the project")
     ->alias("r");
   CLI11_PARSE(app, argc, argv);
-  if (!std::filesystem::exists("./surm.yaml")) {
+  std::filesystem::path surmfile_path_absolute{std::filesystem::absolute("surm.yaml")};
+  if (!std::filesystem::exists(surmfile_path_absolute)) {
     surm::log::error("No surm.yaml file found");
     return 1;
   }
-  surm::Parser parser{"./surm.yaml"};
+  surm::Parser parser{surmfile_path_absolute};
   auto user_surmfile = parser.get_surmfile();
   surm::log::Logger::flush_messages();
   /* Surmfile parsed */
@@ -38,7 +39,7 @@ int main(int argc, const char** argv) {
       return 0;
     }
     if(app.get_subcommand("which")->parsed()) {
-      std::println("{}", user_surmfile.path.string());
+      std::println("{}", user_surmfile.absolute_path.string());
       return 0;
     }
   }

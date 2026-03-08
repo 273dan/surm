@@ -1,9 +1,9 @@
 project:
-  name: project
+  name: one_file_executable_auto
   version: 0.0.0
   standard: 17
 executable:
   name: main
   sources:
-    ./main.cpp
+    main.cpp
 Hello, world!

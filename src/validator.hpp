@@ -8,7 +8,7 @@
 namespace surm {
 class Validator {
 public:
-  Validator(const SurmFile& original) : original_surmfile_{original}, new_surmfile_{original}, ad_{original.path} {}
+  Validator(const SurmFile& original) : original_surmfile_{original}, new_surmfile_{original}, ad_{original.absolute_path} {}
 
   [[nodiscard]]
   std::optional<SurmFile> validate() {
@@ -23,7 +23,7 @@ private:
   void validate_project() {
     new_surmfile_.project = new_surmfile_.project.value_or(section::Project{});
     auto& proj = new_surmfile_.project.value();
-    proj.name = proj.name.value_or("project");
+    proj.name = proj.name.value_or(new_surmfile_.absolute_path.parent_path().filename());
     proj.version = proj.version.value_or("0.0.0");
     proj.standard = proj.standard.value_or("17");
     

@@ -17,8 +17,8 @@ public:
             auto ext = dir_entry.path().extension();
             return ext == ".cpp" || ext == ".hpp";
         })
-        | std::views::transform([](const fs::directory_entry& dir_entry) {
-            return dir_entry.path().string();
+        | std::views::transform([this](const fs::directory_entry& dir_entry) {
+            return dir_entry.path().lexically_relative(root_dir_).string();
         })
         | std::ranges::to<std::vector<std::string>>();
   }

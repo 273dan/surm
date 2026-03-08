@@ -10,14 +10,14 @@
 namespace surm {
 
 struct SurmFile {
-  static SurmFile from_yaml(const std::filesystem::path& path, const YAML::Node& node) {
+  static SurmFile from_yaml(const std::filesystem::path& absolute_path, const YAML::Node& node) {
       SurmFile file {
         .project = section::Project::from_yaml(node),
         .tasks = section::Tasks::from_yaml(node),
         .deps = section::Deps::from_yaml(node),
         .executable = section::Executable::from_yaml(node),
         .targets = section::Targets::from_yaml(node),
-        .path = path
+        .absolute_path = absolute_path
       };
       return file;
   }
@@ -34,6 +34,6 @@ struct SurmFile {
   std::optional<section::Deps> deps;
   std::optional<section::Executable> executable;
   std::optional<section::Targets> targets;
-  std::filesystem::path path;
+  std::filesystem::path absolute_path;
 };
 }
