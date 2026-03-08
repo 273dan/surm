@@ -9,6 +9,7 @@
 #include "log.hpp"
 #include "CLI11.hpp"
 #include "parser.hpp"
+#include "depsmanager.hpp"
 
 int main(int argc, const char** argv) {
   CLI::App app{"surm"};
@@ -23,6 +24,8 @@ int main(int argc, const char** argv) {
     ->alias("b");
   app.add_subcommand("run", "Build + run the project")
     ->alias("r");
+  app.add_subcommand("fetch", "Fetch dependencies")
+    ->alias("f");
   CLI11_PARSE(app, argc, argv);
   std::filesystem::path surmfile_path_absolute{std::filesystem::absolute("surm.yaml")};
   if (!std::filesystem::exists(surmfile_path_absolute)) {
@@ -39,7 +42,7 @@ int main(int argc, const char** argv) {
       return 0;
     }
     if(app.get_subcommand("which")->parsed()) {
-      std::println("{}", user_surmfile.absolute_path.string());
+      std::println("{}", user_surmfile.absolute_path_to_file.string());
       return 0;
     }
   }
@@ -60,17 +63,17 @@ int main(int argc, const char** argv) {
     validated_surmfile.print_debug();
     return 0;
   }
+  /* DepsManager created */
+  surm::DepsManager depsmanager{validated_surmfile};
+  if(app.got_subcommand("fetch")) {
+    depsmanager.fetch();
+  }
 
   /* Builder created */
-  surm::Builder builder{validated_surmfile};
+  surm::Builder builder{validated_surmfile, depsmanager};
   if(app.get_subcommand("build")->parsed()) {
     int ec = builder.build();
   }
-
-
-
-
-  
 
   return 0;
 }

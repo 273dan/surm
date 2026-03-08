@@ -10,18 +10,17 @@ enum Level {
   Warn,
   Error
 };
-struct GenericMessage{
-  Level level;
-  std::string message;
-};
-struct MissingSourcesForTarget {
-  std::string target;
-  std::vector<std::string> sources;
-};
+struct GenericMessage{ Level level; std::string message; };
+struct MissingSourcesForTarget { std::string target; std::vector<std::string> sources; };
+struct DepMissingRepo { };
+struct DepRepoMalformed { std::string repo; };
+
 class Logger {
 public:
   using LogMessage = std::variant<GenericMessage,
-                                  MissingSourcesForTarget>;
+                                  MissingSourcesForTarget,
+                                  DepMissingRepo,
+                                  DepRepoMalformed>;
   static Logger& get() {
     static Logger logger;
     return logger;
@@ -57,6 +56,12 @@ public:
     for(auto& source: message.sources) {
       std::println("    - {}", source);
     }
+  }
+  static void log(const DepMissingRepo& message) {
+    log::error("dependency with missing 'repo'");
+  }
+  static void log(const DepRepoMalformed& message) {
+    log::error("repo string {} is malformed", message.repo);
   }
 };
 }

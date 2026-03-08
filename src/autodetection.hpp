@@ -26,13 +26,13 @@ public:
   std::vector<std::string> check_files_exist(const std::vector<std::string>& files_rel_to_root) {
     return files_rel_to_root
       | std::views::filter([this](auto& file){
-          return !(std::filesystem::exists(root_dir_.append(file)));
+          return !(std::filesystem::exists(root_dir_ / file));
         })
       | std::ranges::to<std::vector<std::string>>();
   }
 
 private:
-  std::filesystem::path root_dir_;
+  const std::filesystem::path root_dir_;
 
 };
 }

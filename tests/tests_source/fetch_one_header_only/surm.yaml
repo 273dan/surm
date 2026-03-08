@@ -1,0 +1,4 @@
+deps:
+  - repo: nlohmann/json
+    release: 3.12.0
+    file: json.hpp
