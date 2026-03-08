@@ -14,6 +14,8 @@
 int main(int argc, const char** argv) {
   CLI::App app{"surm"};
   app.require_subcommand();
+  bool quiet;
+  app.add_flag("-q", quiet, "Surpress all non-essential output");
   app.add_subcommand("show", "Print surm.yaml as surm sees it")
     ->alias("s");
   app.add_subcommand("which", "Print the full path of the current surm.yaml file")
@@ -28,7 +30,13 @@ int main(int argc, const char** argv) {
     ->alias("f");
   app.add_subcommand("clean", "Remove all local dependencies")
     ->alias("c");
+
   CLI11_PARSE(app, argc, argv);
+  /* Arguments parsed */
+
+  surm::log::Logger::quiet = quiet;
+  
+
   std::filesystem::path surmfile_path_absolute{std::filesystem::absolute("surm.yaml")};
   if (!std::filesystem::exists(surmfile_path_absolute)) {
     surm::log::error("No surm.yaml file found");

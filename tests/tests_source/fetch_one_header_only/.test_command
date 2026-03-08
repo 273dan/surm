@@ -1,1 +1,1 @@
-surm fetch && surm run
+surm -q fetch && surm run

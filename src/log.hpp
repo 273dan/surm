@@ -26,6 +26,7 @@ public:
                                   DepRepoMalformed,
                                   DepsFetched,
                                   NoDepsToFetch>;
+  static inline bool quiet = false;
   static Logger& get() {
     static Logger logger;
     return logger;
@@ -36,6 +37,7 @@ public:
   }
 
   static void flush_messages() {
+    if(quiet) return;
     Logger& logger = Logger::get();
     for(const auto& message: logger.messages) {
       log_immediate(message);
@@ -43,6 +45,7 @@ public:
     logger.messages.clear();
   }
   static void log_immediate(LogMessage message) {
+    if(quiet) return;
     std::visit([](const auto& msg) { log(msg); }, message);
   }
   std::vector<LogMessage> messages{};
