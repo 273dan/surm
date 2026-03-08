@@ -1,5 +1,6 @@
 #pragma once
 #include "surmfile.hpp"
+#include "log.hpp"
 #include <filesystem>
 #include <stdexcept>
 namespace surm {
@@ -17,10 +18,19 @@ public:
     if(validated_surmfile_.deps->deps.empty()) {
       return;
     }
+    log::DepsFetched log_message;
+    
     for(auto& dep: validated_surmfile_.deps->deps) {
-      download_to_deps(dep);
-      link_to_include(dep);
+      if(!dep_exists_locally(dep)) {
+        download_to_deps(dep);
+        link_to_include(dep);
+        log_message.fetched++;
+      }
+      else {
+        log_message.skipped++;
+      }
     }
+    log::Logger::log_immediate(log_message);
   }
 
   std::filesystem::path get_path_to_include_dir(const section::Dep& dep) {
@@ -46,6 +56,10 @@ private:
   }
   bool include_dir_exists() const {
     return std::filesystem::exists(absolute_path_to_base_include_dir);
+  }
+  bool dep_exists_locally(const section::Dep& dep) {
+    return std::filesystem::exists(get_path_to_file_in_deps(dep));
+
   }
 
   std::string get_dep_file_url(const section::Dep& dep) {
