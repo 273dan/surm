@@ -1,3 +1,2 @@
 executable:
-  name: main
-  sources: [missing_file.cpp]
+  sources: [main.cpp, missing_file.cpp]

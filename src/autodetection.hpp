@@ -23,14 +23,12 @@ public:
         | std::ranges::to<std::vector<std::string>>();
   }
 
-  bool check_files_exist(const std::vector<std::string>& files_rel_to_root) {
-    for(const auto& path: files_rel_to_root) {
-      auto abs_path = root_dir_.append(path);
-      if(!std::filesystem::exists(abs_path)) {
-        return false;
-      }
-    }
-    return true;
+  std::vector<std::string_view> check_files_exist(const std::vector<std::string>& files_rel_to_root) {
+    return files_rel_to_root
+      | std::views::filter([this](auto& file){
+          return !(std::filesystem::exists(root_dir_.append(file)));
+        })
+      | std::ranges::to<std::vector<std::string_view>>();
   }
 
 private:

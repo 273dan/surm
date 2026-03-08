@@ -40,8 +40,12 @@ private:
       exec.sources = ad_.autodetect_sources_for_single_exec();
     }
     else {
-      if(!ad_.check_files_exist(exec.sources)) {
-        log::Logger::add_message(log::LogMessage::Error, "Source does not exist");
+      const auto missing_files = ad_.check_files_exist(exec.sources);
+      if(!missing_files.empty()) {
+        log::Logger::add_message(log::LogMessage::Error, "The following sources for {} do not exist", exec.name.value());
+        for(auto& file: missing_files) {
+          log::Logger::add_message(log::LogMessage::Info, "{}", file);
+        }
         is_valid = false;
       }
     }
