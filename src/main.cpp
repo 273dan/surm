@@ -26,6 +26,8 @@ int main(int argc, const char** argv) {
     ->alias("r");
   app.add_subcommand("fetch", "Fetch dependencies")
     ->alias("f");
+  app.add_subcommand("clean", "Remove all local dependencies")
+    ->alias("c");
   CLI11_PARSE(app, argc, argv);
   std::filesystem::path surmfile_path_absolute{std::filesystem::absolute("surm.yaml")};
   if (!std::filesystem::exists(surmfile_path_absolute)) {
@@ -67,6 +69,9 @@ int main(int argc, const char** argv) {
   surm::DepsManager depsmanager{validated_surmfile};
   if(app.got_subcommand("fetch")) {
     depsmanager.fetch();
+  }
+  if(app.got_subcommand("clean")) {
+    depsmanager.clean();
   }
 
   /* Builder created */

@@ -29,6 +29,10 @@ public:
         / dep.v_repo.value()
         / "";
   }
+  void clean() {
+    if(dep_dir_exists()) std::filesystem::remove_all(absolute_path_to_base_dep_dir);
+    if(include_dir_exists()) std::filesystem::remove_all(absolute_path_to_base_include_dir);
+  }
 
 
 private:
@@ -37,9 +41,13 @@ private:
   const std::filesystem::path absolute_path_to_base_dep_dir;
   const std::filesystem::path absolute_path_to_base_include_dir;
 
-  bool dep_exists_locally(const section::Dep& dep) {
-    return std::filesystem::exists(get_path_to_dep_dir(dep));
-  };
+  bool dep_dir_exists() const {
+    return std::filesystem::exists(absolute_path_to_base_dep_dir);
+  }
+  bool include_dir_exists() const {
+    return std::filesystem::exists(absolute_path_to_base_include_dir);
+  }
+
   std::string get_dep_file_url(const section::Dep& dep) {
     if(dep.release.value() == "latest") {
       throw std::runtime_error("latest tag not supported");
