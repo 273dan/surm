@@ -68,7 +68,7 @@ private:
     auto url = get_dep_file_url(dep);
     auto output_path = get_path_to_file_in_deps(dep);
     std::string command = std::format(
-        "curl -L {} -o {}",
+        "curl -sL {} -o {}",
         url,
         output_path.string()
     );
