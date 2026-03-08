@@ -1,0 +1,12 @@
+project:
+  name: multi_file_executable_auto
+  version: 0.0.0
+  standard: 17
+executable:
+  name: main
+  sources:
+    main.cpp
+    src/fn_1.hpp
+    src/src2/fn_2.hpp
+Hello from function 1
+Hello from function 2
