@@ -1,4 +1,3 @@
-#include <memory>
 #include <yaml-cpp/yaml.h>
 #include <rang.hpp>
 #include <indicators/progress_spinner.hpp>
@@ -25,7 +24,7 @@ int main(int argc, const char** argv) {
     ->alias("r");
   CLI11_PARSE(app, argc, argv);
   if (!std::filesystem::exists("./surm.yaml")) {
-    surm::log::Logger::error("No surm.yaml file found");
+    surm::log::error("No surm.yaml file found");
     return 1;
   }
   surm::Parser parser{"./surm.yaml"};
@@ -49,7 +48,7 @@ int main(int argc, const char** argv) {
   std::optional<surm::SurmFile> validated_surmfile_opt =  validator.validate();
   surm::log::Logger::flush_messages();
   if(!validated_surmfile_opt.has_value()) {
-    surm::log::Logger::error("surmfile errors");
+    surm::log::error("surmfile errors");
     return 1;
   }
 

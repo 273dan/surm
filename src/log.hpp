@@ -1,85 +1,62 @@
 #pragma once
-#include "rang.hpp"
-#include <format>
-#include <iostream>
+#include <variant>
 #include <vector>
+#include <string>
+#include <print>
+#include "log_utils.hpp"
 namespace surm::log {
-struct LogMessage {
-  enum Level {
-    Info,
-    Warn,
-    Error
-  };
+enum Level {
+  Info,
+  Warn,
+  Error
+};
+struct GenericMessage{
   Level level;
   std::string message;
-
+};
+struct MissingSourcesForTarget {
+  std::string target;
+  std::vector<std::string> sources;
 };
 class Logger {
 public:
-  template <typename ...Args>
-  static void error(std::format_string<Args...> fmt, Args&&... args) {
-    std::cout
-      << rang::style::bold
-      << rang::fg::red
-      << "[!] "
-      << std::format(fmt, std::forward<Args>(args)...) 
-      << rang::style::reset
-      << "\n";
-  }
-  template <typename ...Args>
-  static void warn(std::format_string<Args...> fmt, Args&&... args) {
-    std::cout
-      << rang::style::bold
-      << rang::fg::yellow
-      << "[?] "
-      << std::format(fmt, std::forward<Args>(args)...) 
-      << rang::style::reset
-      << "\n";
-  }
-  template <typename ...Args>
-  static void info(std::format_string<Args...> fmt, Args&&... args) {
-    std::cout
-      << rang::style::bold
-      << rang::fg::blue
-      << "[i] "
-      << rang::style::reset
-      << std::format(fmt, std::forward<Args>(args)...) 
-      << "\n";
-  }
+  using LogMessage = std::variant<GenericMessage,
+                                  MissingSourcesForTarget>;
   static Logger& get() {
     static Logger logger;
     return logger;
   }
-  template <typename ...Args>
-  static void add_message(LogMessage::Level level, std::format_string<Args...> fmt, Args&&... args) {
+  static void add_message(LogMessage message) {
     Logger& logger = Logger::get();
-    logger.messages.push_back(LogMessage{
-        .level = level,
-        .message = std::format(fmt, std::forward<Args>(args)...),
-    });
+    logger.messages.push_back(message);
   }
+
   static void flush_messages() {
     Logger& logger = Logger::get();
-    for(auto& message: logger.messages) {
-      switch(message.level) {
-        case LogMessage::Error:
-          error("{}", message.message);
-          break;
-        case LogMessage::Warn:
-          warn("{}", message.message);
-          break;
-        case LogMessage::Info:
-          info("{}", message.message);
-          break;
-      }
-
+    for(const auto& message: logger.messages) {
+      std::visit([](const auto& msg) { log(msg); }, message);
     }
     logger.messages.clear();
-
-
   }
   std::vector<LogMessage> messages{};
-
+  static void log(const GenericMessage& message) {
+    switch(message.level) {
+      case Level::Info:
+        log::info("{}", message.message);
+        break;
+      case Level::Warn:
+        log::warn("{}", message.message);
+        break;
+      case Level::Error:
+        log::error("{}", message.message);
+        break;
+    }
+  }
+  static void log(const MissingSourcesForTarget& message) {
+    log::error("Missing sources for target {}:", message.target);
+    for(auto& source: message.sources) {
+      std::println("    - {}", source);
+    }
+  }
 };
-
 }

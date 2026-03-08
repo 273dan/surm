@@ -42,10 +42,10 @@ private:
     else {
       const auto missing_files = ad_.check_files_exist(exec.sources);
       if(!missing_files.empty()) {
-        log::Logger::add_message(log::LogMessage::Error, "The following sources for {} do not exist", exec.name.value());
-        for(auto& file: missing_files) {
-          log::Logger::add_message(log::LogMessage::Info, "{}", file);
-        }
+        log::Logger::add_message(log::MissingSourcesForTarget{
+            .target = exec.name.value(),
+            .sources = missing_files
+        });
         is_valid = false;
       }
     }
