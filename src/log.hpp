@@ -16,6 +16,7 @@ struct DepMissingRepo { };
 struct DepRepoMalformed { std::string repo; };
 struct DepsFetched { size_t fetched{}; size_t skipped{}; };
 struct NoDepsToFetch {};
+struct NoSources {};
 
 
 class Logger {
@@ -25,7 +26,8 @@ public:
                                   DepMissingRepo,
                                   DepRepoMalformed,
                                   DepsFetched,
-                                  NoDepsToFetch>;
+                                  NoDepsToFetch,
+                                  NoSources>;
   static inline bool quiet = false;
   static Logger& get() {
     static Logger logger;
@@ -98,6 +100,9 @@ public:
   }
   static void log(const NoDepsToFetch& message) {
     log::warn("no dependencies to fetch");
+  }
+  static void log(const NoSources& message) {
+    log::error("no c++ source files found");
   }
 };
 }

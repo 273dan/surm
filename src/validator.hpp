@@ -40,6 +40,12 @@ private:
     }
     if(exec.sources.empty()) {
       exec.sources = ad_.autodetect_sources_for_single_exec();
+      if(exec.sources.empty()) {
+        log::Logger::add_message(log::NoSources{});
+
+          is_valid = false;
+        
+      }
     }
     else {
       const auto missing_files = ad_.check_files_exist(exec.sources);
