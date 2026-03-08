@@ -1,11 +1,16 @@
 target_sources(surm
   PRIVATE
     main.cpp
-    log.hpp
-    section_deps.hpp
-    section_executable.hpp
-    section_project.hpp
-    section_tasks.hpp
-    surmfile.hpp
-    parser.hpp
+    util.hpp
 )
+
+add_subdirectory(log)
+add_subdirectory(stages)
+add_subdirectory(surmfile)
+
+target_include_directories(surm
+  PRIVATE
+    src
+    src/log
+    src/stages
+    src/surmfile)

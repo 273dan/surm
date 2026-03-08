@@ -12,11 +12,14 @@ add_subdirectory(third_party/yaml-cpp)
 add_executable(surm)
 target_link_libraries(surm PRIVATE yaml-cpp)
 target_include_directories(surm PRIVATE 
+    src
+    src/log
+    src/stages
+    src/surmfile
     third_party/rang/include
     third_party/indicators/include
     third_party/cli11
 )
 
 add_subdirectory(src)
-
 

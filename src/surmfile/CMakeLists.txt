@@ -1,0 +1,9 @@
+target_sources(surm
+  PRIVATE
+    section_deps.hpp
+    section_executable.hpp
+    section_project.hpp
+    section_targets.hpp
+    section_tasks.hpp
+    surmfile.hpp
+)

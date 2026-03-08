@@ -1,5 +1,5 @@
 #pragma once
-#include "surmfile.hpp"
+#include "surmfile/surmfile.hpp"
 #include "log.hpp"
 #include <filesystem>
 #include <stdexcept>
