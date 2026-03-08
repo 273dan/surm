@@ -79,6 +79,11 @@ int main(int argc, const char** argv) {
   if(app.got_subcommand("build")) {
     int ec = builder.build();
   }
+  if(app.got_subcommand("run")) {
+    int ec = builder.build();
+    if(ec == 0)
+      builder.run();
+  }
 
   return 0;
 }

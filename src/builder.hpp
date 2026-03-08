@@ -19,6 +19,11 @@ public:
     int ec = std::system(cmd.c_str());
     return ec;
   }
+  void run() const {
+    const auto& exec = surmfile_.executable.value();
+    const std::string cmd = std::format("./{}", exec.name.value());
+    std::system(cmd.c_str());
+  }
 private:
   const SurmFile& surmfile_;
   DepsManager& depsmanager_;

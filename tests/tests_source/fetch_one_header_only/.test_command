@@ -1,1 +1,1 @@
-surm fetch && surm build && ./main
+surm fetch && surm run
