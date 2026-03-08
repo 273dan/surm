@@ -12,10 +12,8 @@ public:
     absolute_path_to_base_dep_dir(validated_surmfile.absolute_path_to_parent_folder / ".surm" / "deps"),
     absolute_path_to_base_include_dir(validated_surmfile.absolute_path_to_parent_folder / ".surm" / "include") {}
   void fetch(bool force = false) {
-    if(!validated_surmfile_.deps.has_value()) {
-      return;
-    }
-    if(validated_surmfile_.deps->deps.empty()) {
+    if(!validated_surmfile_.deps.has_value() or validated_surmfile_.deps->deps.empty()) {
+      log::Logger::log_immediate(log::NoDepsToFetch{});
       return;
     }
     log::DepsFetched log_message;

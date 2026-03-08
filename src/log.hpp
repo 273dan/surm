@@ -15,6 +15,7 @@ struct MissingSourcesForTarget { std::string target; std::vector<std::string> so
 struct DepMissingRepo { };
 struct DepRepoMalformed { std::string repo; };
 struct DepsFetched { size_t fetched{}; size_t skipped{}; };
+struct NoDepsToFetch {};
 
 
 class Logger {
@@ -23,7 +24,8 @@ public:
                                   MissingSourcesForTarget,
                                   DepMissingRepo,
                                   DepRepoMalformed,
-                                  DepsFetched>;
+                                  DepsFetched,
+                                  NoDepsToFetch>;
   static Logger& get() {
     static Logger logger;
     return logger;
@@ -90,6 +92,9 @@ public:
       << message.skipped
       << rang::style::reset
       << " skipped)\n";
+  }
+  static void log(const NoDepsToFetch& message) {
+    log::warn("no dependencies to fetch");
   }
 };
 }
